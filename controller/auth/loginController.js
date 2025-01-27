@@ -1,27 +1,41 @@
 const { models: { loginModel } } = require('../../model/index.js');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 module.exports = {
   addUser: async (req, res) => {
     const { username, password, userRoles } = req.body;
-
+  
     try {
-      // Cek apakah username sudah ada di database
+      // Check if the username already exists in the database
       const existingUser = await loginModel.findOne({ where: { username } });
-
+  
       if (existingUser) {
-        // Jika username sudah ada, kembalikan status 400 dengan pesan error
+        // If the username is already taken, return a 400 status with an error message
         return res.status(400).json({
           message: 'Username sudah digunakan, silakan pilih username yang lain.'
         });
       }
-
-      // Jika username tidak ada, buat pengguna baru
-      const newUser = await loginModel.create({ username, password, userRoles });
-
-      // Mengembalikan data pengguna baru yang telah dibuat
+  
+      // Hash the password before saving it to the database
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create a new user with the hashed password
+      const newUser = await loginModel.create({
+        username,
+        password: hashedPassword,
+        userRoles
+      });
+  
+      // Return the newly created user data
       return res.status(201).json({
-        message: 'Pengguna berhasil ditambahkan.',
-        data: newUser
+        message: 'Registrasi berhasil',
+        data: {
+          id: newUser.id_users, // Adjust according to your model structure
+          username: newUser.username,
+          userRoles: newUser.userRoles
+        }
       });
     } catch (error) {
       console.error(error);
@@ -30,29 +44,62 @@ module.exports = {
         errorMessage: error.message
       });
     }
-  },
+  }
+  ,
   LoginUser: async (req, res) => {
-    const { username, password, userRoles } = req.body
-    const user = await loginModel.findOne({ where: { username: username, password: password } })
+
+    const { username, password } = req.body;
+
     try {
-      // console.log(res, 'ress')
+      // Cari pengguna berdasarkan username
+      const user = await loginModel.findOne({ where: { username } });
+
+      // Jika pengguna tidak ditemukan
+      console.log(password, 'password')
+      console.log(user, 'user')
       if (!user) {
         return res.status(401).json({
-          message: 'username atau password salah',
-          errorMesagge: `pasword ${password} salahh woii`
-        })
-      } else {
-        return res.status(200).json({ message: 'Login Berhasil', response: { id: user?.id_users, name: user?.username, userRoles: user?.userRoles } })
+          message: 'Username atau password salah'
+        });
       }
+
+      // Verifikasi password menggunakan bcrypt
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          message: 'Username atau password salah'
+        });
+      }
+      // console.log('Stored Password Hash:', user.password);
+      // console.log('Entered Password:', password);
+      // console.log('Is Password Valid:', isPasswordValid);
+      // Buat token JWT jika login berhasil
+      const token = jwt.sign(
+        {
+          id: user.id_users, // Ubah sesuai dengan struktur model Anda
+          username: user.username,
+          userRoles: user.userRoles
+        },
+        process.env.JWT_SECRET, // Ambil secret key dari environment
+        { expiresIn: '1h' } // Token berlaku selama 1 jam
+      );
+
+      // Kirimkan response dengan token
+      return res.status(200).json({
+        message: 'Login Berhasil',
+        token, // Mengirimkan token ke client
+        response: {
+          id: user.id_users,
+          name: user.username,
+          userRoles: user.userRoles
+        }
+      });
     } catch (error) {
-      console.error(error);
-      if (error instanceof Sequelize.ValidationError) {
-        return res.status(400).json({ message: 'Validation error', errors: error.errors });
-      } else if (error instanceof Sequelize.UniqueConstraintError) {
-        return res.status(409).json({ message: 'Duplicate entry', errors: error.errors });
-      } else {
-        return res.status(500).json({ message: 'Internal Server Error' });
-      }
+      // console.error(error, err);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        errorMessage: error.message
+      });
     }
 
   },
