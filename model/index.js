@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 
 // Inisialisasi koneksi Sequelize
-const sequelize = new Sequelize('db_koperasi', 'root', '', {
+const sequelize = new Sequelize('db_koperasi_v2', 'root', '', {
   host: 'localhost',
   dialect: 'mysql'
 });

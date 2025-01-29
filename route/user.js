@@ -1,54 +1,53 @@
-const expess = require('express');
-;
-const loginController= require('../controller/auth/loginController.js');
+const express = require("express");
+const loginController = require("../controller/auth/loginController.js");
+const pengajuanController = require("../controller/koperasi/pengajuanController.js");
+const permohonanController = require("../controller/koperasi/permohonanController.js");
+const angsuranController = require("../controller/koperasi/angsuranController.js");
+const masterAnalisaController = require("../controller/master/analisaController.js");
+const masterNasabahController = require("../controller/master/nasabahController.js");
+const authMiddleware = require("../controller/config/authMiddleware.js"); 
 
-const pengajuanController = require('../controller/koperasi/pengajuanController.js');
-const permohonanController = require('../controller/koperasi/permohonanController.js');
-const angsuranController = require('../controller/koperasi/angsuranController.js');
+const routers = express.Router();
 
-const masterAnalisaController = require('../controller/master/analisaController.js');
-const masterNasabahController = require('../controller/master/nasabahController.js');
-const validation = require('../validation/user/validation.js');
+// 🟢 Tanpa Auth (Public Routes)
+routers.post("/login", loginController.LoginUser);
+routers.post("/register", loginController.addUser);
 
-const routers = expess.Router();
+// 🔴 Dengan Auth (Protected Routes)
+routers.get("/allUser", authMiddleware, loginController.getUser);
+routers.get("/allUserByRoles", authMiddleware, loginController.getUserByRole);
+routers.delete("/allUser/:id", authMiddleware, loginController.deleteUser);
+routers.put("/allUser/:id", authMiddleware, loginController.putUser);
 
-routers.post('/login',loginController.LoginUser);
-routers.post('/register',loginController.addUser);
-routers.get('/allUser',loginController.getUser);
-routers.get('/allUserByRoles',loginController.getUserByRole);
-routers.delete('/allUser/:id',loginController.deleteUser);
-routers.put('/allUser/:id',loginController.putUser);
+routers.get("/angsuran", authMiddleware, angsuranController.getAngsuran);
+routers.post("/angsuran", authMiddleware, angsuranController.addAngsuran);
+routers.delete("/angsuran/:id", authMiddleware, angsuranController.deleteAngsuran);
+routers.put("/angsuran/:id", authMiddleware, angsuranController.putAngsuran);
 
-routers.get('/angsuran',angsuranController.getAngsuran);
-routers.post('/angsuran',angsuranController.addAngsuran);
-routers.delete('/angsuran/:id',angsuranController.deleteAngsuran);
-routers.put('/angsuran/:id',angsuranController.putAngsuran);
+routers.get("/permohonan", authMiddleware, permohonanController.getPermohonan);
+routers.get("/permohonanByApprove", authMiddleware, permohonanController.getPermohonanByApprove);
+routers.post("/permohonan", authMiddleware, permohonanController.addPermohonan);
+routers.delete("/permohonan/:id", authMiddleware, permohonanController.deletePermohonan);
+routers.put("/permohonan/:id", authMiddleware, permohonanController.putPermohonan);
+routers.put("/approvalPermohonan/:id", authMiddleware, permohonanController.approvalPermohonan);
 
-routers.get('/permohonan',permohonanController.getPermohonan);
-routers.get('/permohonanByApprove',permohonanController.getPermohonanByApprove);
-routers.post('/permohonan',permohonanController.addPermohonan);
-routers.delete('/permohonan/:id',permohonanController.deletePermohonan);
-routers.put('/permohonan/:id',permohonanController.putPermohonan);
-routers.put('/approvalPermohonan/:id',permohonanController.approvalPermohonan);
+routers.get("/pengajuan", authMiddleware, pengajuanController.getPengajuan);
+routers.get("/pengajuanByNoAkad", authMiddleware, pengajuanController.getPengajuanByNoAkad);
+routers.post("/pengajuan", authMiddleware, pengajuanController.addPengajuan);
+routers.delete("/pengajuan/:id", authMiddleware, pengajuanController.deletePengajuan);
+routers.put("/pengajuanByApprove/:id", authMiddleware, pengajuanController.approvalPengajuan);
+routers.put("/pengajuan/:id", authMiddleware, pengajuanController.putPengajuan);
 
-routers.get('/pengajuan',pengajuanController.getPengajuan);
-routers.get('/pengajuanByNoAkad',pengajuanController.getPengajuanByNoAkad);
-routers.post('/pengajuan',pengajuanController.addPengajuan);
-routers.delete('/pengajuan/:id',pengajuanController.deletePengajuan);
-routers.put('/pengajuanByApprove/:id',pengajuanController.approvalPengajuan);
-routers.put('/pengajuan/:id',pengajuanController.putPengajuan);
+routers.get("/masterAnalisa", authMiddleware, masterAnalisaController.getAnalisa);
+routers.post("/masterAnalisa", authMiddleware, masterAnalisaController.addAnalisa);
+routers.delete("/masterAnalisa/:id", authMiddleware, masterAnalisaController.deleteAnalisa);
+routers.put("/masterAnalisa/:id", authMiddleware, masterAnalisaController.putAnalisa);
 
-routers.get('/masterAnalisa',masterAnalisaController.getAnalisa);
-routers.post('/masterAnalisa',masterAnalisaController.addAnalisa);
-routers.delete('/masterAnalisa/:id',masterAnalisaController.deleteAnalisa);
-routers.put('/masterAnalisa/:id',masterAnalisaController.putAnalisa);
-
-routers.get('/masterNasabah',masterNasabahController.getNasabah);
-routers.get('/masterNasabah/:id',masterNasabahController.getNasabahId);
-routers.get('/masterNasabahByRekening/:mstRekening',masterNasabahController.getNasabahRekening);
-routers.post('/masterNasabah',masterNasabahController.addNasabah);
-routers.delete('/masterNasabah/:id',masterNasabahController.deleteNasabah);
-routers.put('/masterNasabah/:id',masterNasabahController.putNasabah);
-
+routers.get("/masterNasabah", authMiddleware, masterNasabahController.getNasabah);
+routers.get("/masterNasabah/:id", authMiddleware, masterNasabahController.getNasabahId);
+routers.get("/masterNasabahByRekening/:mstRekening", authMiddleware, masterNasabahController.getNasabahRekening);
+routers.post("/masterNasabah", authMiddleware, masterNasabahController.addNasabah);
+routers.delete("/masterNasabah/:id", authMiddleware, masterNasabahController.deleteNasabah);
+routers.put("/masterNasabah/:id", authMiddleware, masterNasabahController.putNasabah);
 
 module.exports = routers;

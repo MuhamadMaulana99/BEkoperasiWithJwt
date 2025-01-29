@@ -6,6 +6,7 @@ const {
     loginModel
   }
 } = require('../../model/index.js');
+const authMiddleware = require("../config/authMiddleware.js");
 
 module.exports = {
   addPermohonan: async (req, res) => {
