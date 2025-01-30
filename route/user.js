@@ -32,6 +32,7 @@ routers.put("/permohonan/:id", authMiddleware, permohonanController.putPermohona
 routers.put("/approvalPermohonan/:id", authMiddleware, permohonanController.approvalPermohonan);
 
 routers.get("/pengajuan", authMiddleware, pengajuanController.getPengajuan);
+routers.get("/approvelPengajuan", authMiddleware, pengajuanController.getApprovelPengajuan);
 routers.get("/pengajuanByNoAkad", authMiddleware, pengajuanController.getPengajuanByNoAkad);
 routers.post("/pengajuan", authMiddleware, pengajuanController.addPengajuan);
 routers.delete("/pengajuan/:id", authMiddleware, pengajuanController.deletePengajuan);

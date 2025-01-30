@@ -26,14 +26,6 @@ module.exports = (sequelize, DataTypes) => {
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE',
         },
-        rekening: {
-            type: DataTypes.STRING(50),
-            defaultValue: null,  // Mengganti default menjadi defaultValue
-        },
-        namaNasabah: {
-            type: DataTypes.STRING(50),
-            defaultValue: null,
-        },
         penjualan: {
             type: DataTypes.INTEGER,
             defaultValue: null,
@@ -95,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
         },
         jaminan: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.INTEGER,
             defaultValue: null,
         },
         accPermohonan: {
