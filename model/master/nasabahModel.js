@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
             default: null,
         },
         mstjenisKelamin: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.TEXT,
             default: null,
         },
         mstAlamat: {
