@@ -26,34 +26,6 @@ module.exports = (sequelize, DataTypes) => {
             onUpdate: 'CASCADE',      // Mengatur agar ketika data di tabel users di-update, data di tabel ini juga ikut ter-update
             onDelete: 'CASCADE',      // Mengatur agar ketika data di tabel users dihapus, data di tabel ini juga ikut terhapus
         },
-        // rekening: {
-        //     type: DataTypes.STRING(50),
-        //     default: null,
-        // },
-        // namaNasabah: {
-        //     type: DataTypes.STRING(50),
-        //     default: null,
-        // },
-        jenisKelamin: {
-            type: DataTypes.STRING(50),
-            default: null,
-        },
-        alamat: {
-            type: DataTypes.STRING(50),
-            default: null,
-        },
-        kecamatan: {
-            type: DataTypes.STRING(50),
-            default: null,
-        },
-        kabupaten: {
-            type: DataTypes.STRING(50),
-            default: null,
-        },
-        provinsi: {
-            type: DataTypes.STRING(50),
-            default: null,
-        },
         statusPermohonan: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,

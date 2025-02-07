@@ -28,9 +28,7 @@ module.exports = {
       accPermohonan,
       nomorAkad,
       status,
-      statusBy,
       statusAt,
-      foto,
     } = req.body;
 
     try {
@@ -56,9 +54,7 @@ module.exports = {
         accPermohonan,
         nomorAkad,
         status,
-        statusBy,
         statusAt,
-        foto,
       });
       res.json(add);
     } catch (error) {
@@ -140,9 +136,7 @@ module.exports = {
           "accPermohonan",
           "nomorAkad",
           "status",
-          "statusBy",
           "statusAt",
-          "foto",
         ],
       });
 
@@ -193,12 +187,7 @@ module.exports = {
           {
             model: masterNasabah,
             as: "nasabah",
-            attributes: [
-              "id_mst_nasabah",
-              "nama",
-              "mstNik",
-              "mstRekening",
-            ], // Ambil atribut yang diperlukan
+            attributes: ["id_mst_nasabah", "nama", "mstNik", "mstRekening"], // Ambil atribut yang diperlukan
           },
         ],
         attributes: [
@@ -209,7 +198,6 @@ module.exports = {
           "nominalPermohonan",
           "jaminan",
           "status",
-          "statusBy",
           "statusAt",
         ],
       });
@@ -256,11 +244,9 @@ module.exports = {
       });
       res.json(get);
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          error: "Error fetching Pengajuan by No Akad: " + error.message,
-        });
+      res.status(500).json({
+        error: "Error fetching Pengajuan by No Akad: " + error.message,
+      });
     }
   },
 
@@ -289,9 +275,7 @@ module.exports = {
       accPermohonan,
       nomorAkad,
       status,
-      statusBy,
       statusAt,
-      foto,
     } = req.body;
 
     try {
@@ -318,9 +302,7 @@ module.exports = {
           accPermohonan,
           nomorAkad,
           status,
-          statusBy,
           statusAt,
-          foto,
         },
         {
           where: { id_pengajuans },

@@ -119,7 +119,7 @@ module.exports = {
 
   getUser: async (req, res) => {
     const get = await loginModel.findAll({
-      attributes: ["id_users", "username", "password", "userRoles"],
+      attributes: ["id_users", "username",  "userRoles"],
     });
     const val = get?.map((value) => {
       return {
