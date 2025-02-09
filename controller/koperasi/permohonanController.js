@@ -97,11 +97,11 @@ module.exports = {
         ],
       });
 
-      if (get.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "Data permohonan tidak ditemukan" });
-      }
+      // if (get.length === 0) {
+      //   return res
+      //     .status(404)
+      //     .json({ message: "Data permohonan tidak ditemukan" });
+      // }
 
       res.status(200).json(get);
     } catch (error) {
@@ -209,7 +209,7 @@ module.exports = {
       // Define validation schema
       const schema = Joi.object({
         statusPermohonan: Joi.string().valid(true, false).required(),
-        hasilPermohonan: Joi.string().required(),
+        hasilPermohonan: Joi.boolean(),
         persentase: Joi.number().min(0).max(100).required(),
       });
 
